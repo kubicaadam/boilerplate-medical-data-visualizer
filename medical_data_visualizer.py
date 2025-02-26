@@ -18,6 +18,25 @@ df["gluc"] = df["gluc"].apply(lambda x: 0 if x == 1 else 1)
 print(df)
 
 # 4
+
+fig, axs = plt.subplots(1, 2, figsize=(12,6), sharey=True)
+
+c0_data = df.loc[df["cardio"] == 0][["cholesterol", "gluc", "smoke", "alco", "active", "overweight"]].sum()
+print(c0_data)
+print(c0_data.keys())
+c0_names = list(c0_data.keys())
+c0_values = list(c0_data)
+
+#cholesterol, gluc, smoke, alco, active, and overweight
+#cardio = 0
+#cardio = 1
+
+axs[0].bar(c0_names, c0_values)
+#fig.suptitle('Categorical Plotting')
+
+
+fig.savefig('catplot.png')
+
 def draw_cat_plot():
     # 5
     df_cat = None
