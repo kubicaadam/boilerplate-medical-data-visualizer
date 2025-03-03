@@ -21,17 +21,43 @@ print(df)
 
 fig, axs = plt.subplots(1, 2, figsize=(12,6), sharey=True)
 
-c0_data = df.loc[df["cardio"] == 0][["cholesterol", "gluc", "smoke", "alco", "active", "overweight"]].sum()
-print(c0_data)
-print(c0_data.keys())
-c0_names = list(c0_data.keys())
-c0_values = list(c0_data)
+#c0_data = df.loc[df["cardio"] == 0][["active", "alco", "cholesterol", "gluc", "overweight", "smoke"]].sum()
+#print(c0_data)
+#print(c0_data.keys())
 
-#cholesterol, gluc, smoke, alco, active, and overweight
+
+
+#"active", "alco", "cholesterol", "gluc", "overweight", "smoke"
 #cardio = 0
 #cardio = 1
 
-axs[0].bar(c0_names, c0_values)
+dfm = pd.melt(df, id_vars=['cardio'], value_vars=["active", "alco", "cholesterol", "gluc", "overweight", "smoke"])
+
+
+
+dfm = dfm.groupby(['variable', 'value', 'cardio']).count().reset_index(name='cnt')
+print('dfm')
+print(dfm)
+
+dfm_c0 = dfm.loc[dfm["cardio"] == 0]
+dfm_c1 = dfm.loc[dfm["cardio"] == 1]
+
+print("dfm_c0")
+print(dfm_c0)
+
+print("dfm_c1")
+print(dfm_c1)
+
+values_c0 = list(dfm_c0["cardio"])
+names_c0 = list(dfm_c0["variable"])
+
+print('values_c0')
+print(values_c0)
+
+print('names_c0')
+print(names_c0)
+
+axs[0].bar(names_c0, values_c0)
 #fig.suptitle('Categorical Plotting')
 
 
