@@ -3,87 +3,34 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 
-# 1 Import the data from medical_examination.csv and assign it to the df variable.
+# 1
 df = pd.read_csv("medical_examination.csv")
 
-# 2 Add an overweight column to the data. To determine if a person is overweight, first calculate their BMI by dividing their weight in kilograms
-# by the square of their height in meters. If that value is > 25 then the person is overweight.
-# Use the value 0 for NOT overweight and the value 1 for overweight.
+# 2
 df["bmi"] = round(df["weight"] / ((df["height"] / 100) ** 2), 1)
 df["overweight"] = df["bmi"].apply(lambda x: 1 if x > 25 else 0)
 
-# 3 Normalize data by making 0 always good and 1 always bad. If the value of cholesterol or gluc is 1, set the value to 0. If the value is more than 1, set the value to 1.
+# 3
 df["cholesterol"] = df["cholesterol"].apply(lambda x: 0 if x == 1 else 1)
 df["gluc"] = df["gluc"].apply(lambda x: 0 if x == 1 else 1)
-print(df)
 
 # 4
-
-fig, axs = plt.subplots(1, 2, figsize=(12,6), sharey=True)
-
-#c0_data = df.loc[df["cardio"] == 0][["active", "alco", "cholesterol", "gluc", "overweight", "smoke"]].sum()
-#print(c0_data)
-#print(c0_data.keys())
-
-
-
-#"active", "alco", "cholesterol", "gluc", "overweight", "smoke"
-#cardio = 0
-#cardio = 1
-
-dfm = pd.melt(df, id_vars=['cardio'], value_vars=["active", "alco", "cholesterol", "gluc", "overweight", "smoke"])
-
-
-
-dfm = dfm.groupby(['variable', 'value', 'cardio']).count().reset_index(name='cnt')
-print('dfm')
-print(dfm)
-
-dfm_c0 = dfm.loc[dfm["cardio"] == 0]
-dfm_c1 = dfm.loc[dfm["cardio"] == 1]
-
-print("dfm_c0")
-print(dfm_c0)
-
-print("dfm_c1")
-print(dfm_c1)
-
-values_c0 = list(dfm_c0["cardio"])
-names_c0 = list(dfm_c0["variable"])
-
-print('values_c0')
-print(values_c0)
-
-print('names_c0')
-print(names_c0)
-
-axs[0].bar(names_c0, values_c0)
-#fig.suptitle('Categorical Plotting')
-
-
-fig.savefig('catplot.png')
-
 def draw_cat_plot():
     # 5
-    df_cat = None
-
+    df_cat = pd.melt(df, id_vars=['cardio'], value_vars=["active", "alco", "cholesterol", "gluc", "overweight", "smoke"])
 
     # 6
-    df_cat = None
-    
+    df_cat = df_cat.groupby(['variable', 'value', 'cardio']).size().reset_index(name='total')
 
     # 7
-
-
+    #print(df_cat.dtypes)
 
     # 8
-    fig = None
-
+    fig = sns.catplot(data=df_cat, x="variable", y="total", hue="value", kind="bar", col="cardio")
 
     # 9
     fig.savefig('catplot.png')
     return fig
-
 
 # 10
 def draw_heat_map():
