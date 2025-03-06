@@ -35,23 +35,37 @@ def draw_cat_plot():
 # 10
 def draw_heat_map():
     # 11
-    df_heat = None
+    df_heat = df.loc[
+        (df['ap_lo'] <= df['ap_hi'])
+        & (df['height'] >= df['height'].quantile(0.025))
+        & (df['height'] <= df['height'].quantile(0.975))
+        & (df['weight'] >= df['weight'].quantile(0.025))
+        & (df['weight'] <= df['weight'].quantile(0.975))
+    ]
+
+    #diastolic pressure is higher than systolic (Keep the correct data with (df['ap_lo'] <= df['ap_hi']))
+    #height is less than the 2.5th percentile (Keep the correct data with (df['height'] >= df['height'].quantile(0.025)))
+    #height is more than the 97.5th percentile
+    #weight is less than the 2.5th percentile
+    #weight is more than the 97.5th percentile
 
     # 12
-    corr = None
+    corr = df_heat.corr()
 
     # 13
-    mask = None
-
-
+    mask = np.zeros_like(corr)
+    mask[np.triu_indices_from(mask)] = True
 
     # 14
-    fig, ax = None
+    fig, ax = plt.subplots(figsize=(11,9))
 
     # 15
-
-
+    sns.set(font_scale=0.6)
+    sns.heatmap(corr, ax=ax, mask=mask, annot=True, fmt=".1f", linewidth=.5, robust=True )
 
     # 16
     fig.savefig('heatmap.png')
     return fig
+
+
+draw_heat_map()
