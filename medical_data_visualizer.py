@@ -7,7 +7,7 @@ import numpy as np
 df = pd.read_csv("medical_examination.csv")
 
 # 2
-df["bmi"] = round(df["weight"] / ((df["height"] / 100) ** 2), 1)
+df["bmi"] = df["weight"] / ((df["height"] / 100) ** 2)
 df["overweight"] = df["bmi"].apply(lambda x: 1 if x > 25 else 0)
 
 # 3
@@ -26,7 +26,7 @@ def draw_cat_plot():
     #print(df_cat.dtypes)
 
     # 8
-    fig = sns.catplot(data=df_cat, x="variable", y="total", hue="value", kind="bar", col="cardio")
+    fig = sns.catplot(data=df_cat, x="variable", y="total", hue="value", kind="bar", col="cardio").fig
 
     # 9
     fig.savefig('catplot.png')
@@ -42,6 +42,8 @@ def draw_heat_map():
         & (df['weight'] >= df['weight'].quantile(0.025))
         & (df['weight'] <= df['weight'].quantile(0.975))
     ]
+
+    df_heat = df_heat.drop(columns=['bmi'])
 
     #diastolic pressure is higher than systolic (Keep the correct data with (df['ap_lo'] <= df['ap_hi']))
     #height is less than the 2.5th percentile (Keep the correct data with (df['height'] >= df['height'].quantile(0.025)))
